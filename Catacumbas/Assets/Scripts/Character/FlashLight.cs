@@ -6,8 +6,8 @@ public class FlashLight : MonoBehaviour
 {
     [Header("References")]
     public Light flashLight;
-
-    public bool activLight;
+    public BatteryUI batteryUI;
+    private bool activLight;
 
     [Header("Battery")]
     public float initDurationBattery = 100;
@@ -16,21 +16,15 @@ public class FlashLight : MonoBehaviour
     public float dischargeVelocity = 1;
     private bool isChangingBattery;
 
-    [Header("UI")]
-    public Image battery1;
-    public Image battery2;
-    public Image battery3;
-    public Image battery4;
-    public Sprite fullBattery;
-    public Sprite emptyBattery;
-    public Text percentage;
-
-
     void Start()
     {
         activLight = false;
         actualDurationBattery = initDurationBattery;
         isChangingBattery = false;
+
+        //UI
+        batteryUI.InitBattery(actualDurationBattery,countBattery);
+
 
         //int valueBattery = (int)durationBattery;
         //percentage.text = valueBattery.ToString() + "%";
@@ -45,27 +39,41 @@ public class FlashLight : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
         {
             activLight = !activLight;
+            Debug.Log("F");
+        }
+        ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria
+        else if (Input.GetKeyDown(KeyCode.R) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
+        {
+            Debug.Log("R");
+
+            StartCoroutine(ChangeBatteryWithDelay());
+
         }
 
         if (actualDurationBattery <= 0)
         {
+            activLight = false;
+
             if (countBattery <= 0)
             {
                 activLight = false;
             }
-            else if(!isChangingBattery)
-            {
-                //Esperar.. Cambiar
-                StartCoroutine(ChangeBatteryWithDelay());
-            }
+            //else if(!isChangingBattery)
+            //{
+            //    //Esperar.. Cambiar
+               
+            //}
 
         }
         else
         {
+
             ConsumeBattery();
         }
 
         IntensityLight();
+        batteryUI.changeCountBattery(countBattery);
+        batteryUI.ChangeActualBattery(actualDurationBattery);
     }
 
     private void ConsumeBattery()
@@ -73,6 +81,8 @@ public class FlashLight : MonoBehaviour
         if (activLight && actualDurationBattery > 0)
         {
             actualDurationBattery -= dischargeVelocity * Time.deltaTime;
+            //UI
+            //batteryUI.ChangeActualBattery(actualDurationBattery);
         }
     }
 
@@ -80,16 +90,17 @@ public class FlashLight : MonoBehaviour
     private IEnumerator ChangeBatteryWithDelay()
     {
         isChangingBattery = true;
-        activLight = false;
+        //activLight = false;
 
         yield return new WaitForSeconds(0.5f); // Espera 1 segundo
 
         countBattery--;
-        Debug.Log("batteries: " + countBattery);
+      
+        //Debug.Log("batteries: " + countBattery);
 
         actualDurationBattery = initDurationBattery;
 
-        activLight = true;
+        //activLight = true;
         isChangingBattery = false;
     }
 
@@ -97,11 +108,11 @@ public class FlashLight : MonoBehaviour
     public void IntensityLight()
     {
         // Supongamos que el rango original de intensidad de luz es de 0 a 1 (puedes ajustar esto según tu configuración).
-        float minIntensity = 0.0f;
+        float minIntensity = 0.5f;
         float maxIntensity = 3.0f;
 
         // Normaliza la duración de la batería entre 0 y 1.
-        float normalizedBatteryDuration = (actualDurationBattery - 0.0f) / initDurationBattery;
+        float normalizedBatteryDuration = actualDurationBattery / initDurationBattery;
 
         // Calcula la intensidad de luz proporcional a la duración de la batería.
         float normalizedIntensity = Mathf.Lerp(minIntensity, maxIntensity, normalizedBatteryDuration);
@@ -111,6 +122,8 @@ public class FlashLight : MonoBehaviour
 
 
     }
+
+
 
 
 
