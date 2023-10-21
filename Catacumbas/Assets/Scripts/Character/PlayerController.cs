@@ -21,7 +21,7 @@ public class PlayerController : MonoBehaviour
     [Header("Jump")]
     public float jumpForce = 8f;
     public float jumpCooldown = 1.0f;
-    private bool readyToJump = true;
+    public bool readyToJump = true;
     private float verticalVelocity = 0;
 
     [Header("Rotation")]

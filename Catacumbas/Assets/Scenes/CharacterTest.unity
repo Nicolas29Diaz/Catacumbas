@@ -682,6 +682,7 @@ GameObject:
   - component: {fileID: 590850742}
   - component: {fileID: 590850741}
   - component: {fileID: 590850740}
+  - component: {fileID: 590850743}
   m_Layer: 0
   m_Name: PlayerCam
   m_TagString: MainCamera
@@ -756,6 +757,27 @@ Transform:
   m_Father: {fileID: 1389566849}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &590850743
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 590850739}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: f6b2cde11b39ef64d9474f6b5f226f3a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &756407180
 GameObject:
   m_ObjectHideFlags: 0
@@ -1097,7 +1119,7 @@ GameObject:
   - component: {fileID: 964518662}
   - component: {fileID: 964518661}
   - component: {fileID: 964518660}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1602,6 +1624,8 @@ GameObject:
   - component: {fileID: 1389566850}
   - component: {fileID: 1389566851}
   - component: {fileID: 1389566852}
+  - component: {fileID: 1389566853}
+  - component: {fileID: 1389566854}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1662,6 +1686,7 @@ MonoBehaviour:
   runSpeed: 8
   jumpForce: 2
   jumpCooldown: 0.2
+  readyToJump: 1
   rotationSensitivity: 2
 --- !u!114 &1389566852
 MonoBehaviour:
@@ -1677,6 +1702,123 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashLight: {fileID: 1947788868}
   amountBattery: 1
+--- !u!114 &1389566853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389566847}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d134fc1a4b8106c4991202e8dec5fce9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layer:
+    serializedVersion: 2
+    m_Bits: 192
+  cameraObj: {fileID: 590850739}
+  audioSource: {fileID: 1389566854}
+  groundSound: {fileID: 8300000, guid: 1a19f6c53cbdb454ca60aa964e86b549, type: 3}
+  stoneSound: {fileID: 8300000, guid: 1a19f6c53cbdb454ca60aa964e86b549, type: 3}
+  horizontalInput: 0
+  verticalInput: 0
+--- !u!82 &1389566854
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1389566847}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1392015330
 GameObject:
   m_ObjectHideFlags: 0
@@ -2258,9 +2400,9 @@ GameObject:
   - component: {fileID: 1738704848}
   - component: {fileID: 1738704847}
   - component: {fileID: 1738704846}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Cube
-  m_TagString: Untagged
+  m_TagString: Stone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
