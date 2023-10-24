@@ -7,11 +7,11 @@ public class BatteryUI : MonoBehaviour
 {
     private Slider batterySlider;
     public TextMeshProUGUI countText;
-    void Start()
+    private void Awake()
     {
         batterySlider = GetComponent<Slider>();
     }
-
+  
     public void ChangeMaxBattery(float maxBattery)
     {
         batterySlider.maxValue = maxBattery;
@@ -29,6 +29,7 @@ public class BatteryUI : MonoBehaviour
     
     public void InitBattery(float battery, float countBattery)
     {
+        Debug.Log(battery + "  " + countBattery);
         ChangeMaxBattery(battery);
         ChangeActualBattery(battery);
         changeCountBattery(countBattery);

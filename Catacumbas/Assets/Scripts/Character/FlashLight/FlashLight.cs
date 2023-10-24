@@ -11,7 +11,7 @@ public class FlashLight : MonoBehaviour
 
     [Header("Battery")]
     public float initDurationBattery = 100;
-    public float actualDurationBattery;
+    public float actualDurationBattery = 0f;
     public float countBattery = 3;
     public float dischargeVelocity = 1;
     private bool isChangingBattery;
@@ -23,6 +23,7 @@ public class FlashLight : MonoBehaviour
         isChangingBattery = false;
 
         //UI
+        Debug.Log(actualDurationBattery + "  " +  countBattery);
         batteryUI.InitBattery(actualDurationBattery,countBattery);
 
 
@@ -39,12 +40,12 @@ public class FlashLight : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
         {
             activLight = !activLight;
-            Debug.Log("F");
+            //Debug.Log("F");
         }
         ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria
         else if (Input.GetKeyDown(KeyCode.R) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
         {
-            Debug.Log("R");
+            //Debug.Log("R");
 
             StartCoroutine(ChangeBatteryWithDelay());
 
@@ -92,7 +93,7 @@ public class FlashLight : MonoBehaviour
         isChangingBattery = true;
         //activLight = false;
 
-        yield return new WaitForSeconds(0.5f); // Espera 1 segundo
+        yield return new WaitForSeconds(0.5f); // Espera 
 
         countBattery--;
       
