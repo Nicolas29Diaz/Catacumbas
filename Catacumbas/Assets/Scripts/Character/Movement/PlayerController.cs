@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,11 +18,17 @@ public class PlayerController : MonoBehaviour
     [Header("Movement")]
     public float walkSpeed = 5f;
     public float runSpeed = 10f;
+    public float crouchSpeed = 3f;
+    public float runCrouchSpeed = 4f;
+
+    [Header("Stamina")]
+    public float actualStamina;
+    public float velRegainStamina = 1f;
+    public float maxStamina = 50f;
 
     [Header("Jump")]
     public float jumpForce = 8f;
     public float jumpCooldown = 1.0f;
-    public bool readyToJump = true;
     private float verticalVelocity = 0;
 
     [Header("Rotation")]
@@ -30,23 +37,73 @@ public class PlayerController : MonoBehaviour
     private Vector3 rotationInput = Vector3.zero;
     private float cameraVerticalAngle;
 
+    [Header("Teclas")]
+    public KeyCode crouchKey = KeyCode.LeftControl;
+    public KeyCode jumpKey = KeyCode.LeftControl;
+    public KeyCode runKey = KeyCode.LeftControl;
+
+    private bool readyToJump = true;
+    private bool upCollision;
+    private bool crouching = false;
+    private bool running = false;
+    private bool canRun = true;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        actualStamina = maxStamina;
     }
 
     private void Update()
     {
         HandleMovement();
         HandleRotation();
-        //RotationFlashLight();
+        UpCollision();
+        HandleCrouching();
+        HandleStamina();
     }
+ 
+    private float SpeedMovement()
+    {
+        float speed = walkSpeed;
 
+        if (Input.GetButton("Sprint") && canRun)
+        {
+            if (crouching)
+            {
+                speed = runCrouchSpeed;
+               
+            }
+            else
+            {
+                speed = runSpeed;
+            }
+
+            running = true;
+        }
+        else
+        {
+            if (crouching)
+            {
+                speed = crouchSpeed;
+            }
+            else
+            {
+                speed = walkSpeed;
+            }
+
+            running = false;
+        }
+
+        return speed;
+    }
     private void HandleMovement()
     {
-        float speed = Input.GetButton("Sprint") ? runSpeed : walkSpeed;
+        float speed = SpeedMovement();
+
 
         if (characterController.isGrounded)
         {
@@ -78,6 +135,77 @@ public class PlayerController : MonoBehaviour
             verticalVelocity = -0.5f;
         }
     }
+    private void ResetJump()
+    {
+        readyToJump = true;
+    }
+
+    private void HandleCrouching()
+    {
+        if (Input.GetKeyDown(crouchKey))
+        {
+            Crouching();
+            crouching = true;
+        }
+        else if (Input.GetKeyUp(crouchKey) && upCollision)
+        {
+            Crouching();
+            crouching = true;
+        }
+        else if (Input.GetKeyUp(crouchKey) && !upCollision)
+        {
+            NoCrouching();
+            crouching = false;
+        }
+    }
+    private void Crouching()
+    {
+        characterController.height = 1f;
+        characterController.center = new Vector3(0, -0.5f, 0);
+        playerCamera.transform.localPosition = new Vector3(0, 0.3f, 0);
+    }
+    private void NoCrouching()
+    {
+        characterController.height = 2f;
+        characterController.center = new Vector3(0, 0, 0);
+        playerCamera.transform.localPosition = new Vector3(0, 0.7f, 0);
+    }
+
+    private void HandleStamina()
+    {
+        if (running)
+        {
+            ConsumeStamina();
+        }
+        else
+        {
+            RegainStamina();
+        }
+    }
+    private void ConsumeStamina()
+    {
+        if (actualStamina > 0)
+        {
+            actualStamina -= velRegainStamina * Time.deltaTime;
+        }
+        else
+        {
+            canRun = false;
+        }
+        
+    }
+    private void RegainStamina()
+    {
+        if (actualStamina <= maxStamina)
+        {
+            actualStamina += velRegainStamina * Time.deltaTime;
+        }
+        else
+        {
+            canRun = true;
+        }
+        
+    }
 
     private void HandleRotation()
     {
@@ -90,21 +218,26 @@ public class PlayerController : MonoBehaviour
         // Gira la cámara verticalmente
         cameraVerticalAngle += rotationInput.y;
         cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -70, 70);
-        playerCamera.transform.localRotation = Quaternion.Euler(cameraVerticalAngle,0f,0f);
+        playerCamera.transform.localRotation = Quaternion.Euler(cameraVerticalAngle, 0f, 0f);
 
     }
 
-    private void ResetJump()
+    private void UpCollision()
     {
-        readyToJump = true;
-    }
+        RaycastHit hit;
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag("Battery"))
-    //    {
-    //        flashLight.CollectBattery();
-    //        Destroy(other.gameObject); // Destruye el objeto de la batería
-    //    }
-    //}
+        Vector3 upDirection = playerCamera.transform.up; // Obtiene la dirección "arriba" de la cámara
+
+        if (Physics.Raycast(playerCamera.transform.position, upDirection, out hit, 0.5f))
+        {
+            upCollision = true;
+            readyToJump = false;
+
+        }
+        else
+        {
+            upCollision = false;
+            readyToJump = true;
+        }
+    }
 }

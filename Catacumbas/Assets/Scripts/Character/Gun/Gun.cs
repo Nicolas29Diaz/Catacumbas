@@ -40,7 +40,7 @@ public class Gun : MonoBehaviour
     void Update()
     {
         
-        if (Input.GetButtonDown("Fire1") && shootReady && actualAmo > 0)
+        if (Input.GetMouseButtonDown(0) && shootReady && actualAmo > 0)
         {
             Shoot();
         }
