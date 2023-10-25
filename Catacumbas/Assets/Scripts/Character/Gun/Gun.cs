@@ -81,9 +81,14 @@ public class Gun : MonoBehaviour
     {
         shootReady = false;
         reloadReady = false;
-        
-        for (int i = 0; i <= bulletSaved; i++)
+
+        float bulletSavedInit = bulletSaved;
+
+
+        for (int i = 0; i <= bulletSavedInit; i++)
         {
+            Debug.Log(i);
+            Debug.Log(bulletSaved);
            
             if (actualAmo <= 5)
             {
