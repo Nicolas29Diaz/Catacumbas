@@ -19,13 +19,12 @@ public class Gun : MonoBehaviour
     public int actualAmo = 6;
     public int bulletSaved = 2;
     
-    public float shootDelay = 2f;
     public float delayRealoadBullet = 1f;
     public float delayShootBullet = 1f;
 
     public bool shootReady;
     public bool reloadReady;
-
+    public bool cancelReload;
 
 
 
@@ -34,6 +33,7 @@ public class Gun : MonoBehaviour
     {
         shootReady = true;
         reloadReady = true;
+        cancelReload = true;
     }
 
     // Update is called once per frame
@@ -48,6 +48,10 @@ public class Gun : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E) && reloadReady)
         {
             StartCoroutine(Reload());
+
+        }else if (Input.GetKeyDown(KeyCode.E) && !reloadReady && cancelReload)
+        {
+            CancelReload();
         }
     }
 
@@ -85,7 +89,7 @@ public class Gun : MonoBehaviour
         float bulletSavedInit = bulletSaved;
 
 
-        for (int i = 0; i <= bulletSavedInit; i++)
+        for (int i = 0; i < bulletSavedInit; i++)
         {
             Debug.Log(i);
             Debug.Log(bulletSaved);
@@ -94,7 +98,11 @@ public class Gun : MonoBehaviour
             {
                 yield return new WaitForSeconds(delayRealoadBullet); // Espera 
                 actualAmo++;
-                bulletSaved--;
+                if (bulletSaved > 0)
+                {
+                    bulletSaved--;
+                }
+                
             }
         }
 
@@ -103,39 +111,25 @@ public class Gun : MonoBehaviour
     }
     private IEnumerator WaitForShoot()
     {
+        cancelReload = false;
         shootReady = false;
         reloadReady = false;
         yield return new WaitForSeconds(delayShootBullet); // Espera 
         shootReady = true;
         reloadReady = true;
+        cancelReload = true;
     }
 
+    private void CancelReload()
+    {
+        StopAllCoroutines();
+        shootReady = true;
+        reloadReady = true;
+    }
+
+
+
 }
-    //private void WaitReload()
-    //{
-    //    bulletReloaded = false;
-    //    timePerBulletRelaod -= timerPerBulletRelaod * Time.deltaTime;
-    //    if(timePerBulletRelaod <= 0)
-    //    {
-    //        bulletReloaded = true;
-    //    }
-
-    //}
-
-
-    //public void Reload()
-    //{
-    //    for (int i = 1; i <= bulletSaved; i++)
-    //    {
-    //        shootReady = false;
-    //        if (actualAmo < 6)
-    //        {
-    //            WaitReload();
-    //        }
-    //    }
-
-    //    Debug.Log("Cargador Lleno");
-    //    shootReady = true;
-    //}
+   
 
 

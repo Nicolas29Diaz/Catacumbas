@@ -30,10 +30,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 rotationInput = Vector3.zero;
     private float cameraVerticalAngle;
 
-
-    
-    
-
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -97,12 +93,6 @@ public class PlayerController : MonoBehaviour
         playerCamera.transform.localRotation = Quaternion.Euler(cameraVerticalAngle,0f,0f);
 
     }
-
-    //private void RotationFlashLight()
-    //{
-    //    // Gira la cámara verticalmente
-    //    flashLight.transform.localRotation = Quaternion.Euler(cameraVerticalAngle, 0f, 0f);
-    //}
 
     private void ResetJump()
     {
