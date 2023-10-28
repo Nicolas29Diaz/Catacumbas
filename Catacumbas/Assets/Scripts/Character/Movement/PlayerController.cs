@@ -48,6 +48,8 @@ public class PlayerController : MonoBehaviour
     private bool running = false;
     private bool canRun = true;
 
+    private bool isGamePaused = false;
+
     private void Awake()
     {
         characterController = GetComponent<CharacterController>();
@@ -57,13 +59,43 @@ public class PlayerController : MonoBehaviour
         actualStamina = maxStamina;
     }
 
+    private void OnEnable()
+    {
+        PauseLogic.OnGamePaused += HandleGamePause;
+    }
+
+    private void OnDisable()
+    {
+        PauseLogic.OnGamePaused -= HandleGamePause;
+    }
+
+    private void HandleGamePause(bool pauseStatus)
+    {
+        isGamePaused = pauseStatus;
+
+        // Si el juego está en pausa, también puedes bloquear y ocultar el cursor aquí
+        if (isGamePaused)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
     private void Update()
     {
-        HandleMovement();
-        HandleRotation();
-        UpCollision();
-        HandleCrouching();
-        HandleStamina();
+        if (!isGamePaused)
+        {
+            HandleMovement();
+            HandleRotation();
+            UpCollision();
+            HandleCrouching();
+            HandleStamina();
+        }
     }
  
     private float SpeedMovement()
@@ -209,16 +241,19 @@ public class PlayerController : MonoBehaviour
 
     private void HandleRotation()
     {
-        rotationInput.x = Input.GetAxis("Mouse X") * rotationSensitivity;
-        rotationInput.y = -Input.GetAxis("Mouse Y") * rotationSensitivity;
+        
+            rotationInput.x = Input.GetAxis("Mouse X") * rotationSensitivity;
+            rotationInput.y = -Input.GetAxis("Mouse Y") * rotationSensitivity;
 
-        // Gira el personaje horizontalmente
-        transform.Rotate(Vector3.up * rotationInput.x);
+            // Gira el personaje horizontalmente
+            transform.Rotate(Vector3.up * rotationInput.x);
 
-        // Gira la cámara verticalmente
-        cameraVerticalAngle += rotationInput.y;
-        cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -70, 70);
-        playerCamera.transform.localRotation = Quaternion.Euler(cameraVerticalAngle, 0f, 0f);
+            // Gira la cámara verticalmente
+            cameraVerticalAngle += rotationInput.y;
+            cameraVerticalAngle = Mathf.Clamp(cameraVerticalAngle, -70, 70);
+            playerCamera.transform.localRotation = Quaternion.Euler(cameraVerticalAngle, 0f, 0f);
+
+        
 
     }
 

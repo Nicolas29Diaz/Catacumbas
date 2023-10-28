@@ -16,6 +16,22 @@ public class FlashLight : MonoBehaviour
     public float dischargeVelocity = 1;
     private bool isChangingBattery;
 
+    private bool isGamePaused = false;
+
+    private void OnEnable()
+    {
+        PauseLogic.OnGamePaused += HandleGamePause;
+    }
+
+    private void OnDisable()
+    {
+        PauseLogic.OnGamePaused -= HandleGamePause;
+    }
+
+    private void HandleGamePause(bool pauseStatus)
+    {
+        isGamePaused = pauseStatus;
+    }
     void Start()
     {
         activLight = false;
@@ -34,47 +50,52 @@ public class FlashLight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //actualDurationBattery = Mathf.Clamp(actualDurationBattery, 0, 100);
-        flashLight.enabled = activLight;
-
-        if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
+        if (!isGamePaused)
         {
-            activLight = !activLight;
-            //Debug.Log("F");
-        }
-        ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria
-        else if (Input.GetKeyDown(KeyCode.R) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
-        {
-            //Debug.Log("R");
 
-            StartCoroutine(ChangeBatteryWithDelay());
+            //actualDurationBattery = Mathf.Clamp(actualDurationBattery, 0, 100);
+            flashLight.enabled = activLight;
 
-        }
+            if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
+            {
+                activLight = !activLight;
+                //Debug.Log("F");
+            }
+            ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria
+            else if (Input.GetKeyDown(KeyCode.R) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
+            {
+                //Debug.Log("R");
 
-        if (actualDurationBattery <= 0)
-        {
-            activLight = false;
+                StartCoroutine(ChangeBatteryWithDelay());
 
-            if (countBattery <= 0)
+            }
+
+            if (actualDurationBattery <= 0)
             {
                 activLight = false;
+
+                if (countBattery <= 0)
+                {
+                    activLight = false;
+                }
+                //else if(!isChangingBattery)
+                //{
+                //    //Esperar.. Cambiar
+
+                //}
+
             }
-            //else if(!isChangingBattery)
-            //{
-            //    //Esperar.. Cambiar
-               
-            //}
+            else
+            {
 
-        }
-        else
-        {
+                ConsumeBattery();
+            }
 
-            ConsumeBattery();
+            IntensityLight();
+            batteryUI.changeCountBattery(countBattery);
+            batteryUI.ChangeActualBattery(actualDurationBattery);
         }
 
-        IntensityLight();
-        batteryUI.changeCountBattery(countBattery);
-        batteryUI.ChangeActualBattery(actualDurationBattery);
     }
 
     private void ConsumeBattery()

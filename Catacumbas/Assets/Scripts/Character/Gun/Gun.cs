@@ -26,10 +26,25 @@ public class Gun : MonoBehaviour
     public bool reloadReady;
     public bool cancelReload;
 
+    private bool isGamePaused = false;
 
+    private void OnEnable()
+    {
+        PauseLogic.OnGamePaused += HandleGamePause;
+    }
 
-    // Start is called before the first frame update
-    void Start()
+    private void OnDisable()
+    {
+        PauseLogic.OnGamePaused -= HandleGamePause;
+    }
+
+    private void HandleGamePause(bool pauseStatus)
+    {
+        isGamePaused = pauseStatus;
+    }
+
+        // Start is called before the first frame update
+        void Start()
     {
         shootReady = true;
         reloadReady = true;
@@ -39,20 +54,26 @@ public class Gun : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-        if (Input.GetMouseButtonDown(0) && shootReady && actualAmo > 0)
+
+        if (!isGamePaused)
         {
-            Shoot();
+
+            if (Input.GetMouseButtonDown(0) && shootReady && actualAmo > 0)
+            {
+                Shoot();
+            }
+
+            if (Input.GetKeyDown(KeyCode.E) && reloadReady)
+            {
+                StartCoroutine(Reload());
+
+            }
+            else if (Input.GetKeyDown(KeyCode.E) && !reloadReady && cancelReload)
+            {
+                CancelReload();
+            }
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && reloadReady)
-        {
-            StartCoroutine(Reload());
-
-        }else if (Input.GetKeyDown(KeyCode.E) && !reloadReady && cancelReload)
-        {
-            CancelReload();
-        }
     }
 
 
