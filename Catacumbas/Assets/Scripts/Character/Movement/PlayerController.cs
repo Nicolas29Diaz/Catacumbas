@@ -49,6 +49,7 @@ public class PlayerController : MonoBehaviour
     private bool canRun = true;
 
     private bool isGamePaused = false;
+    
 
     private void Awake()
     {
@@ -132,6 +133,8 @@ public class PlayerController : MonoBehaviour
 
         return speed;
     }
+
+   
     private void HandleMovement()
     {
         float speed = SpeedMovement();
