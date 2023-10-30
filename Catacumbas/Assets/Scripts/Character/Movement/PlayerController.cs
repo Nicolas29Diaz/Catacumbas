@@ -16,10 +16,10 @@ public class PlayerController : MonoBehaviour
 
 
     [Header("Movement")]
-    public float walkSpeed = 5f;
-    public float runSpeed = 10f;
-    public float crouchSpeed = 3f;
-    public float runCrouchSpeed = 4f;
+    public float walkSpeed = 3f;
+    public float runSpeed = 5f;
+    public float crouchSpeed = 1.5f;
+    public float runCrouchSpeed = 3.5f;
 
     [Header("Stamina")]
     public float actualStamina;
@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && readyToJump)
         {
             readyToJump = false;
-            verticalVelocity = jumpForce;
+            //verticalVelocity = jumpForce;
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         else
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
     }
     private void ResetJump()
     {
-        readyToJump = true;
+        //readyToJump = true;
     }
 
     private void HandleCrouching()
