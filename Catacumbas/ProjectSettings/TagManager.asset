@@ -7,16 +7,17 @@ TagManager:
   - Battery
   - Stone
   - Bullet
+  - WayPoints
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - walls
   - Water
   - UI
   - Ground
   - Stone
-  - 
+  - Player
   - 
   - 
   - 
