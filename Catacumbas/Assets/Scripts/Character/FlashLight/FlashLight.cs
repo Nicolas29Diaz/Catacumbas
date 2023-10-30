@@ -7,6 +7,7 @@ public class FlashLight : MonoBehaviour
     [Header("References")]
     public Light flashLight;
     public BatteryUI batteryUI;
+    public RawImage flashLightUILight;
     private bool activLight;
 
     [Header("Battery")]
@@ -55,10 +56,12 @@ public class FlashLight : MonoBehaviour
 
             //actualDurationBattery = Mathf.Clamp(actualDurationBattery, 0, 100);
             flashLight.enabled = activLight;
+            flashLightUILight.enabled = activLight;
 
             if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
             {
                 activLight = !activLight;
+                flashLightUILight.enabled = activLight;
                 //Debug.Log("F");
             }
             ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria

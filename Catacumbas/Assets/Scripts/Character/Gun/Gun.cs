@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Gun : MonoBehaviour
@@ -27,6 +28,8 @@ public class Gun : MonoBehaviour
     public bool cancelReload;
 
     private bool isGamePaused = false;
+
+    public TextMeshProUGUI AmmoText;
 
     private void OnEnable()
     {
@@ -57,6 +60,7 @@ public class Gun : MonoBehaviour
 
         if (!isGamePaused)
         {
+            AmmoText.text = actualAmo + "/" + bulletSaved;
 
             if (Input.GetMouseButtonDown(0) && shootReady && actualAmo > 0)
             {

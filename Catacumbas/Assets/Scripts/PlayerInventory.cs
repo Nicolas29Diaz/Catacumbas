@@ -33,7 +33,7 @@ public class PlayerInventory : MonoBehaviour
         {
             InventorySystem.AddItem(item.ItemObject);
             AudioSource[] audioSources = this.GetComponents<AudioSource>();
-            audioSources[1].PlayOneShot(EfectoSonidoRecoleccion);
+            audioSources[0].PlayOneShot(EfectoSonidoRecoleccion);
             UIObjectsUpdate(item);
             Destroy(other.gameObject);
         }
