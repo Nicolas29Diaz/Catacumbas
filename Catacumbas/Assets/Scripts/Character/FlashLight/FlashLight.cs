@@ -10,6 +10,11 @@ public class FlashLight : MonoBehaviour
     public RawImage flashLightUILight;
     private bool activLight;
 
+    [Header("Teclas")]
+    public KeyCode reload = KeyCode.LeftControl;
+    public KeyCode toggleOn = KeyCode.LeftControl;
+
+
     [Header("Battery")]
     public float initDurationBattery = 100;
     public float actualDurationBattery = 0f;
@@ -58,14 +63,14 @@ public class FlashLight : MonoBehaviour
             flashLight.enabled = activLight;
             flashLightUILight.enabled = activLight;
 
-            if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
+            if (Input.GetKeyDown(toggleOn) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
             {
                 activLight = !activLight;
                 flashLightUILight.enabled = activLight;
                 //Debug.Log("F");
             }
             ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria
-            else if (Input.GetKeyDown(KeyCode.R) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
+            else if (Input.GetKeyDown(reload) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
             {
                 //Debug.Log("R");
 

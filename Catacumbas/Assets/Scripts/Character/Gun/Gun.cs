@@ -11,6 +11,9 @@ public class Gun : MonoBehaviour
     public Camera fpsCamera;
     public ParticleSystem muzzleFlash;
 
+    [Header("Teclas")]
+    public KeyCode reload = KeyCode.LeftControl;
+
     [Header("Bullet")]
     public float damage = 10f;
     public float range = 100f;
@@ -67,12 +70,12 @@ public class Gun : MonoBehaviour
                 Shoot();
             }
 
-            if (Input.GetKeyDown(KeyCode.E) && reloadReady)
+            if (Input.GetKeyDown(reload) && reloadReady)
             {
                 StartCoroutine(Reload());
 
             }
-            else if (Input.GetKeyDown(KeyCode.E) && !reloadReady && cancelReload)
+            else if (Input.GetKeyDown(reload) && !reloadReady && cancelReload)
             {
                 CancelReload();
             }
