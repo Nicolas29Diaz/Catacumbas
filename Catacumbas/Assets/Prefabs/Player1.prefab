@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 6606337361442527622}
   m_Layer: 0
   m_Name: Arma
-  m_TagString: Untagged
+  m_TagString: Gun
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -595,6 +595,7 @@ MonoBehaviour:
   shootReady: 0
   reloadReady: 0
   cancelReload: 0
+  Shoted: 0
   AmmoText: {fileID: 0}
 --- !u!82 &7459901156027942620
 AudioSource:

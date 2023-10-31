@@ -8,7 +8,11 @@ TagManager:
   - Stone
   - Bullet
   - WayPoints
+<<<<<<< Updated upstream
   - GrassFloor
+=======
+  - Gun
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX

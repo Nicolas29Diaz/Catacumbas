@@ -33,6 +33,8 @@ public class Gun : MonoBehaviour
     public bool shootReady;
     public bool reloadReady;
     public bool cancelReload;
+    public bool Shoted = false;
+
 
     private bool isGamePaused = false;
 
@@ -99,15 +101,16 @@ public class Gun : MonoBehaviour
 
             if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, range))
             {
-                TargetShooting targetShooting = hit.transform.GetComponent<TargetShooting>();
+                EnemyManager targetShooting = hit.transform.GetComponent<EnemyManager>();
                 if (targetShooting != null)
                 {
-                    targetShooting.TakeDamage(damage);
-                    Debug.Log("Damage: " + damage);
+                    targetShooting.GetShoot(damage);
+                    //targetShooting.TakeDamage(damage);
+                    //Debug.Log("Damage: " + damage);
                 }
                 else
                 {
-                    Debug.Log(hit.transform.name);
+                    //Debug.Log(hit.transform.name);
                 }
             }
 
@@ -156,10 +159,13 @@ public class Gun : MonoBehaviour
         cancelReload = false;
         shootReady = false;
         reloadReady = false;
+        Shoted = true;
         yield return new WaitForSeconds(delayShootBullet); // Espera 
         shootReady = true;
         reloadReady = true;
         cancelReload = true;
+        Shoted = false;
+
     }
 
     private void CancelReload()

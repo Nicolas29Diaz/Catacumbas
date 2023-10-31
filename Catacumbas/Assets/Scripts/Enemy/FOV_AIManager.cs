@@ -9,10 +9,13 @@ public class FOV_AIManager : MonoBehaviour
     [Range(0, 360)]
     public float viewAngle;
 
+    public bool isLookingPlayer;
+
     public LayerMask targetMask;
     public LayerMask obstacleMask;
 
     public List<Transform> visibleTargets = new List<Transform>();
+    public Vector3 LastKnownPosition;
 
     private EnemyManager EM;
     private void Start()
@@ -30,8 +33,11 @@ public class FOV_AIManager : MonoBehaviour
         while(true){
             yield return new WaitForSeconds(delay);
             FindVisibleTargets();
+            if(visibleTargets.Count > 0) { isLookingPlayer = true; } else { isLookingPlayer = false; }
+            
         }
     }
+   
     void FindVisibleTargets()
     {
         visibleTargets.Clear();
@@ -45,20 +51,23 @@ public class FOV_AIManager : MonoBehaviour
             {
                 float dstToTarget = Vector3.Distance(transform.position, target.position);
                 if (!Physics.Raycast(transform.position, dirToTarget, dstToTarget, obstacleMask))
+                {
                     visibleTargets.Add(target);
+                    LastKnownPosition = target.position;
+                } 
             }
         }
     }
 
-    //void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.yellow;
-    //    Gizmos.DrawWireSphere(transform.position, viewRadius);
-    //    Vector3 viewAngleA = DirFromAngle(-viewAngle / 2, false);
-    //    Vector3 viewAngleB = DirFromAngle(viewAngle / 2, false);
-    //    Gizmos.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
-    //    Gizmos.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
-    //}
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(transform.position, viewRadius);
+        Vector3 viewAngleA = DirFromAngle(-viewAngle / 2, false);
+        Vector3 viewAngleB = DirFromAngle(viewAngle / 2, false);
+        Gizmos.DrawLine(transform.position, transform.position + viewAngleA * viewRadius);
+        Gizmos.DrawLine(transform.position, transform.position + viewAngleB * viewRadius);
+    }
 
     // Método auxiliar para calcular la dirección del vector a partir de un ángulo
     public Vector3 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
