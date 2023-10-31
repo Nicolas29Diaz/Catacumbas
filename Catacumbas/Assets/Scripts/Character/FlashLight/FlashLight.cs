@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class FlashLight : MonoBehaviour
@@ -11,6 +12,7 @@ public class FlashLight : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip toggleOnSound;
     public AudioClip reloadBatterySound;
+    public TMP_Text recargarTexto;
 
     private bool activLight;
 
@@ -44,6 +46,7 @@ public class FlashLight : MonoBehaviour
     }
     void Start()
     {
+        recargarTexto.gameObject.SetActive(false);
         activLight = false;
         actualDurationBattery = initDurationBattery;
         isChangingBattery = false;
@@ -60,6 +63,7 @@ public class FlashLight : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (!isGamePaused)
         {
 
@@ -85,6 +89,8 @@ public class FlashLight : MonoBehaviour
 
             if (actualDurationBattery <= 0)
             {
+                recargarTexto.gameObject.SetActive(true);
+                recargarTexto.text = "Presiona " + reload.ToString() + " para recargar";
                 activLight = false;
                 //audioSource.PlayOneShot(toggleOnSound);
                 if (countBattery <= 0)
@@ -102,6 +108,7 @@ public class FlashLight : MonoBehaviour
             {
 
                 ConsumeBattery();
+                recargarTexto.gameObject.SetActive(false);
             }
 
             IntensityLight();
@@ -116,6 +123,7 @@ public class FlashLight : MonoBehaviour
         if (activLight && actualDurationBattery > 0)
         {
             actualDurationBattery -= dischargeVelocity * Time.deltaTime;
+            
             //UI
             //batteryUI.ChangeActualBattery(actualDurationBattery);
         }
@@ -127,6 +135,7 @@ public class FlashLight : MonoBehaviour
 
         audioSource.PlayOneShot(reloadBatterySound);
         isChangingBattery = true;
+       
         //activLight = false;
 
         yield return new WaitForSeconds(0.5f); // Espera 
@@ -146,7 +155,7 @@ public class FlashLight : MonoBehaviour
     {
         // Supongamos que el rango original de intensidad de luz es de 0 a 1 (puedes ajustar esto según tu configuración).
         float minIntensity = 0.5f;
-        float maxIntensity = 3.0f;
+        float maxIntensity = 2.0f;
 
         // Normaliza la duración de la batería entre 0 y 1.
         float normalizedBatteryDuration = actualDurationBattery / initDurationBattery;
