@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +27,12 @@ public class PlayerInventory : MonoBehaviour
     private AudioSource musicSource;
     private AudioSource sfxSource;
 
+    public GameObject ritualGameObject;
+
+    private int controladorRitual;
+
+    public GameObject mensajeParaElAdmin;
+
     public void OnTriggerEnter(Collider other)
     {
        var item = other.GetComponent<RitualItem>();
@@ -36,6 +43,12 @@ public class PlayerInventory : MonoBehaviour
             audioSources[0].PlayOneShot(EfectoSonidoRecoleccion);
             UIObjectsUpdate(item);
             Destroy(other.gameObject);
+            if(InventorySystem.container.Count >= 4){
+                ritualGameObject.SetActive(true);
+                mensajeParaElAdmin.SetActive(true);
+                Invoke("desactivarMensaje", 3f);
+            }
+        
         }
 
     }
@@ -80,6 +93,11 @@ public class PlayerInventory : MonoBehaviour
     public void OnApplicationQuit()
     {
         InventorySystem.container.Clear();
+    }
+
+    void desactivarMensaje()
+    {
+        mensajeParaElAdmin.SetActive(false);
     }
 
 

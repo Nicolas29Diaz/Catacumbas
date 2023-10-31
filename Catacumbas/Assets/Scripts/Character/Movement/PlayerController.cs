@@ -261,7 +261,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(jumpKey) && readyToJump)
         {
             readyToJump = false;
-            verticalVelocity = jumpForce;
+            //verticalVelocity = jumpForce;
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         else

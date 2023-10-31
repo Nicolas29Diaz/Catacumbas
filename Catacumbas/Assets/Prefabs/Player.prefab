@@ -565,7 +565,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4413,9 +4413,14 @@ MonoBehaviour:
   flashLight: {fileID: 1294068551000311264}
   batteryUI: {fileID: 485641949274868634}
   flashLightUILight: {fileID: 3677071706749078754}
+  audioSource: {fileID: 0}
+  toggleOnSound: {fileID: 0}
+  reloadBatterySound: {fileID: 0}
+  reload: 306
+  toggleOn: 306
   initDurationBattery: 10
   actualDurationBattery: 0
-  countBattery: 3
+  countBattery: 30
   dischargeVelocity: 1
 --- !u!1 &1294068551477543232
 GameObject:
@@ -4466,6 +4471,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fpsCamera: {fileID: 1294068551671231004}
   muzzleFlash: {fileID: 1294068551932580282}
+  audioSource: {fileID: 0}
+  reloadEndSound: {fileID: 0}
+  reloadBulletSound: {fileID: 0}
+  shootSound: {fileID: 0}
+  reload: 306
   damage: 10
   range: 100
   amoCapacity: 6
@@ -4476,6 +4486,7 @@ MonoBehaviour:
   shootReady: 0
   reloadReady: 0
   cancelReload: 0
+  Shoted: 0
   AmmoText: {fileID: 6966645008326522444}
 --- !u!1 &1294068551574302782
 GameObject:
@@ -4844,8 +4855,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8d0eda0a89e7e5489e01f7ea072b096, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gravity: -7
   playerCamera: {fileID: 1294068551671231004}
+  footStepAudioSource: {fileID: 0}
+  grassClips: []
+  woodClips: []
+  headBobHability: 1
+  footSoundHability: 1
+  jumpHability: 1
+  gravity: -7
   walkSpeed: 3
   runSpeed: 5
   crouchSpeed: 1.5
@@ -4859,6 +4876,16 @@ MonoBehaviour:
   crouchKey: 113
   jumpKey: 306
   runKey: 306
+  walkBobSpeed: 10
+  walkBobAmplitude: 0.05
+  sprintBobSpeed: 13
+  sprintBobAmplitude: 0.1
+  crouchBobSpeed: 5
+  crouchBobAmplitude: 0.025
+  frequencyBob: 10
+  baseStepSpeed: 0.5
+  crouchStepMultiplier: 1.5
+  sprintStepMultiplier: 0.6
 --- !u!114 &1294068551609233382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4892,9 +4919,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b164d8c405ae0de4b8fe79ae7c67054f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraObj: {fileID: 1294068551671231006}
-  horizontalInput: 0
-  verticalInput: 0
+  _enable: 1
+  _Amplitude: 0.012
+  _frequency: 7
+  _camera: {fileID: 0}
+  _cameraHolder: {fileID: 0}
 --- !u!114 &1294068551609233384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4980,7 +5009,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1294068551648046763
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5558,8 +5587,8 @@ RectTransform:
   m_Father: {fileID: 1294068550789437181}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -10998,8 +11027,8 @@ RectTransform:
   m_Father: {fileID: 1294068551897297482}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -11988,7 +12017,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
