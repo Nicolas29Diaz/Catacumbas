@@ -33,6 +33,7 @@ public class PauseLogic : MonoBehaviour
         settingsMenu = GameObject.Find("BackGroundSettingsMenu");
 
         UIPausa.SetActive(false);
+        StartCoroutine(esperar());
         confirmation.SetActive(false);
         settingsMenu.SetActive(false);
 
@@ -105,7 +106,10 @@ public class PauseLogic : MonoBehaviour
     }
 
 
-
+    IEnumerator esperar()
+    {
+        yield return new WaitForSeconds(0.1f);
+    }
 
     public void QuitLevel()
     {

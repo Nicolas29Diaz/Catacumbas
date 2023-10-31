@@ -44552,33 +44552,37 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 157845146, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 222158282, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_text
       value: "You find all the pieces, \xA1Quick, find the ritual!"
       objectReference: {fileID: 0}
     - target: {fileID: 439583826, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 439583826, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 439583826, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1112883557, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1120286020, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1120286020, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1362306002, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: volumeTrigger
@@ -44592,23 +44596,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1463004406, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1463004406, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1785850537, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1785850537, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1785850537, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1941343671, guid: 349a745f0eeaaeb49a69a7f58cc5a4b0, type: 3}
       propertyPath: m_text
