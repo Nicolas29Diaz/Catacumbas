@@ -10,6 +10,10 @@ public class Gun : MonoBehaviour
     [Header("References")]
     public Camera fpsCamera;
     public ParticleSystem muzzleFlash;
+    public AudioSource audioSource;
+    public AudioClip reloadEndSound;
+    public AudioClip reloadBulletSound;
+    public AudioClip shootSound;
 
     [Header("Teclas")]
     public KeyCode reload = KeyCode.LeftControl;
@@ -88,7 +92,8 @@ public class Gun : MonoBehaviour
     {
         actualAmo--;
 
-            muzzleFlash.Play();
+        muzzleFlash.Play();
+        audioSource.PlayOneShot(shootSound);
 
             RaycastHit hit;
 
@@ -124,15 +129,24 @@ public class Gun : MonoBehaviour
            
             if (actualAmo <= 5)
             {
+                audioSource.PlayOneShot(reloadBulletSound);
                 yield return new WaitForSeconds(delayRealoadBullet); // Espera 
+                
                 actualAmo++;
                 if (bulletSaved > 0)
                 {
+                    
                     bulletSaved--;
+                    
                 }
-                
             }
         }
+
+        if (actualAmo >= 6)
+        {
+            audioSource.PlayOneShot(reloadEndSound);
+        }
+       
 
         shootReady = true;
         reloadReady = true;
@@ -150,6 +164,10 @@ public class Gun : MonoBehaviour
 
     private void CancelReload()
     {
+        audioSource.Stop();
+        audioSource.PlayOneShot(reloadEndSound);
+        
+       
         StopAllCoroutines();
         shootReady = true;
         reloadReady = true;

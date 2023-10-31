@@ -8,6 +8,10 @@ public class FlashLight : MonoBehaviour
     public Light flashLight;
     public BatteryUI batteryUI;
     public RawImage flashLightUILight;
+    public AudioSource audioSource;
+    public AudioClip toggleOnSound;
+    public AudioClip reloadBatterySound;
+
     private bool activLight;
 
     [Header("Teclas")]
@@ -65,6 +69,7 @@ public class FlashLight : MonoBehaviour
 
             if (Input.GetKeyDown(toggleOn) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
             {
+                audioSource.PlayOneShot(toggleOnSound);
                 activLight = !activLight;
                 flashLightUILight.enabled = activLight;
                 //Debug.Log("F");
@@ -81,7 +86,7 @@ public class FlashLight : MonoBehaviour
             if (actualDurationBattery <= 0)
             {
                 activLight = false;
-
+                //audioSource.PlayOneShot(toggleOnSound);
                 if (countBattery <= 0)
                 {
                     activLight = false;
@@ -119,6 +124,8 @@ public class FlashLight : MonoBehaviour
 
     private IEnumerator ChangeBatteryWithDelay()
     {
+
+        audioSource.PlayOneShot(reloadBatterySound);
         isChangingBattery = true;
         //activLight = false;
 

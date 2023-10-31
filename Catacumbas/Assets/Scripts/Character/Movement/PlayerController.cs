@@ -376,7 +376,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 upDirection = playerCamera.transform.up; // Obtiene la dirección "arriba" de la cámara
 
-        if (Physics.Raycast(playerCamera.transform.position, upDirection, out hit, 0.5f))
+        if (Physics.Raycast(playerCamera.transform.position, upDirection, out hit, 1f))
         {
             upCollision = true;
             readyToJump = false;
