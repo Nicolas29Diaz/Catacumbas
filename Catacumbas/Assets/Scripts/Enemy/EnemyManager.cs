@@ -10,7 +10,7 @@ public class EnemyManager : MonoBehaviour
     [Header("Parámetros")]
     public float walkingSpeed = 2.0f; // Velocidad al caminar
     public GameObject[] waypoints; // Lista de waypoints
-    private int currentWaypointIndex = 0; // Índice del waypoint actual
+    public int currentWaypointIndex = 0; // Índice del waypoint actual
     private NavMeshAgent navMeshAgent;
     private Animator anim;
     private AudioSource AudSource;
@@ -30,6 +30,7 @@ public class EnemyManager : MonoBehaviour
         OjosManager = GetComponent<FOV_AIManager>();
         OidosManager = GetComponent<HearingLogic>();
         waypoints = GameObject.FindGameObjectsWithTag("WayPoints");
+        //OrganizarWaypoints();
         AudSource = GetComponent<AudioSource>();
         AudSource.clip = AudiosEnemy[0];
         anim = GetComponent<Animator>();
@@ -63,13 +64,15 @@ public class EnemyManager : MonoBehaviour
             enemySpeed = enemyVelocity.magnitude;
 
             SetState();
+            //CalcularCercania();
+            //Patrol();
         }
-        
+
 
         //CheckPlace();
         //Patrol();
 
-        //CalcularCercania();
+
 
     }
 
@@ -153,7 +156,7 @@ public class EnemyManager : MonoBehaviour
     void Patrol()
     {
         // Verifica si el NPC ha alcanzado el waypoint actual
-        if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
+        if (waypoints[currentWaypointIndex].GetComponent<WaypointsLogic>().isArrived)
         {
             // Avanza al siguiente waypoint
             currentWaypointIndex++;
@@ -175,31 +178,12 @@ public class EnemyManager : MonoBehaviour
                 OidosManager.ShotHeard = false;
                 Debug.Log("revisado");
             }
-        //while(!PlaceChecked){
-        //    Transform playerPosition = GameObject.FindGameObjectWithTag("Player").transform;
-        //    MoveToWaypoint(playerPosition);
-        //    if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance)
-        //    {
-        //        PlaceChecked = true;
-        //        Debug.Log(PlaceChecked);
-        //    }
-        //}
-
-        //PlaceChecked = false;
     }
     void MoveToWaypoint(Vector3 t)
     {
-        if (!isGamePaused)
-        {
-            // Establece el destino del NavMeshAgent al waypoint actual
-            anim.SetFloat("Speed", enemySpeed);
-            navMeshAgent.SetDestination(t);
-        }else
-        {
-            anim.SetFloat("Speed", 0);
-            navMeshAgent.speed = 0;
-        }
-        
+        anim.SetFloat("Speed", enemySpeed);
+        navMeshAgent.SetDestination(t);
+
     }
     void OrganizarWaypoints()
     {
@@ -224,14 +208,6 @@ public class EnemyManager : MonoBehaviour
         anim.SetBool("isShoot", true);
         Invoke("ResetearVariableDeDisparo", 2);
         isMovible = false;
-        //if (life <= 0.0f)
-        //{
-        //    //Dead();
-        //}
-        //else
-        //{
-
-        //}
 
     }
     void Attack()
