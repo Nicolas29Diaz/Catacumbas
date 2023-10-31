@@ -39,13 +39,13 @@ public class WalkSound : MonoBehaviour
 
             if (Input.GetButton("Sprint"))
             {
-                Debug.Log("Corriendo");
+                //Debug.Log("Corriendo");
                 Run();
                 StartBobbing();
             }
             else
             {
-                Debug.Log("Caminando");
+                //Debug.Log("Caminando");
                 Walk();
                 StartBobbing();
             }

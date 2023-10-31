@@ -10,6 +10,13 @@ public class Gun : MonoBehaviour
     [Header("References")]
     public Camera fpsCamera;
     public ParticleSystem muzzleFlash;
+    public AudioSource audioSource;
+    public AudioClip reloadEndSound;
+    public AudioClip reloadBulletSound;
+    public AudioClip shootSound;
+
+    [Header("Teclas")]
+    public KeyCode reload = KeyCode.LeftControl;
 
     [Header("Bullet")]
     public float damage = 10f;
@@ -26,6 +33,8 @@ public class Gun : MonoBehaviour
     public bool shootReady;
     public bool reloadReady;
     public bool cancelReload;
+    public bool Shoted = false;
+
 
     private bool isGamePaused = false;
 
@@ -67,12 +76,12 @@ public class Gun : MonoBehaviour
                 Shoot();
             }
 
-            if (Input.GetKeyDown(KeyCode.E) && reloadReady)
+            if (Input.GetKeyDown(reload) && reloadReady)
             {
                 StartCoroutine(Reload());
 
             }
-            else if (Input.GetKeyDown(KeyCode.E) && !reloadReady && cancelReload)
+            else if (Input.GetKeyDown(reload) && !reloadReady && cancelReload)
             {
                 CancelReload();
             }
@@ -85,21 +94,23 @@ public class Gun : MonoBehaviour
     {
         actualAmo--;
 
-            muzzleFlash.Play();
+        muzzleFlash.Play();
+        audioSource.PlayOneShot(shootSound);
 
             RaycastHit hit;
 
             if (Physics.Raycast(fpsCamera.transform.position, fpsCamera.transform.forward, out hit, range))
             {
-                TargetShooting targetShooting = hit.transform.GetComponent<TargetShooting>();
+                EnemyManager targetShooting = hit.transform.GetComponent<EnemyManager>();
                 if (targetShooting != null)
                 {
-                    targetShooting.TakeDamage(damage);
-                    Debug.Log("Damage: " + damage);
+                    targetShooting.GetShoot(damage);
+                    //targetShooting.TakeDamage(damage);
+                    //Debug.Log("Damage: " + damage);
                 }
                 else
                 {
-                    Debug.Log(hit.transform.name);
+                    //Debug.Log(hit.transform.name);
                 }
             }
 
@@ -121,15 +132,24 @@ public class Gun : MonoBehaviour
            
             if (actualAmo <= 5)
             {
+                audioSource.PlayOneShot(reloadBulletSound);
                 yield return new WaitForSeconds(delayRealoadBullet); // Espera 
+                
                 actualAmo++;
                 if (bulletSaved > 0)
                 {
+                    
                     bulletSaved--;
+                    
                 }
-                
             }
         }
+
+        if (actualAmo >= 6)
+        {
+            audioSource.PlayOneShot(reloadEndSound);
+        }
+       
 
         shootReady = true;
         reloadReady = true;
@@ -139,14 +159,21 @@ public class Gun : MonoBehaviour
         cancelReload = false;
         shootReady = false;
         reloadReady = false;
+        Shoted = true;
         yield return new WaitForSeconds(delayShootBullet); // Espera 
         shootReady = true;
         reloadReady = true;
         cancelReload = true;
+        Shoted = false;
+
     }
 
     private void CancelReload()
     {
+        audioSource.Stop();
+        audioSource.PlayOneShot(reloadEndSound);
+        
+       
         StopAllCoroutines();
         shootReady = true;
         reloadReady = true;

@@ -7,16 +7,22 @@ TagManager:
   - Battery
   - Stone
   - Bullet
+  - WayPoints
+<<<<<<< Updated upstream
+  - GrassFloor
+=======
+  - Gun
+>>>>>>> Stashed changes
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - walls
   - Water
   - UI
   - Ground
   - Stone
-  - 
+  - Player
   - 
   - 
   - 

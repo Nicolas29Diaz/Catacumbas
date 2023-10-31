@@ -8,7 +8,16 @@ public class FlashLight : MonoBehaviour
     public Light flashLight;
     public BatteryUI batteryUI;
     public RawImage flashLightUILight;
+    public AudioSource audioSource;
+    public AudioClip toggleOnSound;
+    public AudioClip reloadBatterySound;
+
     private bool activLight;
+
+    [Header("Teclas")]
+    public KeyCode reload = KeyCode.LeftControl;
+    public KeyCode toggleOn = KeyCode.LeftControl;
+
 
     [Header("Battery")]
     public float initDurationBattery = 100;
@@ -58,14 +67,15 @@ public class FlashLight : MonoBehaviour
             flashLight.enabled = activLight;
             flashLightUILight.enabled = activLight;
 
-            if (Input.GetKeyDown(KeyCode.F) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
+            if (Input.GetKeyDown(toggleOn) && actualDurationBattery > 0 && countBattery >= 0 && !isChangingBattery)
             {
+                audioSource.PlayOneShot(toggleOnSound);
                 activLight = !activLight;
                 flashLightUILight.enabled = activLight;
                 //Debug.Log("F");
             }
             ///*&& actualDurationBattery <= 0*/ acá es por su queremos que se pueda recargar así no se haya agotado la bateria
-            else if (Input.GetKeyDown(KeyCode.R) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
+            else if (Input.GetKeyDown(reload) /*&& actualDurationBattery <= 0*/ && countBattery > 0 && !isChangingBattery)
             {
                 //Debug.Log("R");
 
@@ -76,7 +86,7 @@ public class FlashLight : MonoBehaviour
             if (actualDurationBattery <= 0)
             {
                 activLight = false;
-
+                //audioSource.PlayOneShot(toggleOnSound);
                 if (countBattery <= 0)
                 {
                     activLight = false;
@@ -114,6 +124,8 @@ public class FlashLight : MonoBehaviour
 
     private IEnumerator ChangeBatteryWithDelay()
     {
+
+        audioSource.PlayOneShot(reloadBatterySound);
         isChangingBattery = true;
         //activLight = false;
 

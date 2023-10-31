@@ -8,12 +8,21 @@ public class PlayerController : MonoBehaviour
 {
     private CharacterController characterController;
 
-    [Header("General")]
-    public float gravity = -9.81f;
-
     [Header("References")]
     public Camera playerCamera;
+    [SerializeField] AudioSource footStepAudioSource = default;
+    [SerializeField] private AudioClip[] grassClips = default;
+    [SerializeField] private AudioClip[] woodClips = default;
 
+
+    [Header("HabilityToggle")]
+    [SerializeField] private bool headBobHability = true;
+    [SerializeField] private bool footSoundHability = true;
+    [SerializeField] private bool jumpHability = true;
+
+
+    [Header("General")]
+    public float gravity = -9.81f;
 
     [Header("Movement")]
     public float walkSpeed = 3f;
@@ -38,15 +47,40 @@ public class PlayerController : MonoBehaviour
     private float cameraVerticalAngle;
 
     [Header("Teclas")]
-    public KeyCode crouchKey = KeyCode.LeftControl;
-    public KeyCode jumpKey = KeyCode.LeftControl;
-    public KeyCode runKey = KeyCode.LeftControl;
+    public KeyCode crouchKey = KeyCode.Q;
+    public KeyCode jumpKey = KeyCode.Space;
+    public KeyCode runKey = KeyCode.LeftShift;
+
+
+    [Header("HeadBobing")]
+    [SerializeField] private float walkBobSpeed = 10f;
+    [SerializeField] private float walkBobAmplitude = 0.05f;
+    [SerializeField] private float sprintBobSpeed = 13f;
+    [SerializeField] private float sprintBobAmplitude = 0.1f;
+    [SerializeField] private float crouchBobSpeed = 5f;
+    [SerializeField] private float crouchBobAmplitude = 0.025f;
+    [SerializeField, Range(0, 10)] private float frequencyBob = 10.0f;
+    private float defauktYPos = 0;
+    private float defauktXPos = 0;
+    private float timerBob = 0;
+
+
+    [Header("HeadBobing")]
+    [SerializeField] private float baseStepSpeed = 0.5f;
+    [SerializeField] private float crouchStepMultiplier = 1.5f;
+    [SerializeField] private float sprintStepMultiplier = 0.6f;
+
+    private float footStepTimer = 0;
+    private float GetCurrentOffset => crouching ? baseStepSpeed * crouchStepMultiplier : running ? baseStepSpeed * sprintStepMultiplier : baseStepSpeed;
+
+
 
     private bool readyToJump = true;
     private bool upCollision;
     private bool crouching = false;
     private bool running = false;
     private bool canRun = true;
+    private Vector2 currentInput;
 
     private bool isGamePaused = false;
     
@@ -56,7 +90,8 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
-
+        defauktYPos = playerCamera.transform.localPosition.y;
+        defauktXPos = playerCamera.transform.localPosition.x;
         actualStamina = maxStamina;
     }
 
@@ -89,6 +124,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        
         if (!isGamePaused)
         {
             HandleMovement();
@@ -96,14 +132,72 @@ public class PlayerController : MonoBehaviour
             UpCollision();
             HandleCrouching();
             HandleStamina();
+            if (headBobHability)
+            {
+                HandleHeadBobing();
+            }
+            if (footSoundHability)
+            {
+                HandleFootSteps();
+            }
+
         }
     }
- 
+
+    private void HandleFootSteps()
+    {
+        if (!characterController.isGrounded) return;
+        if (currentInput == Vector2.zero)
+        {
+            footStepAudioSource.Stop();
+            Debug.Log("NO SONAR");
+        }
+        else
+        {
+            Debug.Log("SONAR");
+            footStepTimer -= Time.deltaTime;
+
+            if (footStepTimer <= 0)
+            {
+                Debug.Log("SONAR2");
+                // Dibuja el raycast en la escena
+               
+
+                if (Physics.Raycast(characterController.transform.position, Vector3.down, out RaycastHit hit, 3))
+                {
+                    Debug.Log(hit.collider.tag);
+                    switch (hit.collider.tag)
+                    {
+                        case "GrassFloor":
+                            Debug.Log("SONAR4");
+                            footStepAudioSource.PlayOneShot(grassClips[UnityEngine.Random.Range(0, grassClips.Length - 1)]);
+                            break;
+
+                        case "WoodFloor":
+
+                            footStepAudioSource.PlayOneShot(woodClips[UnityEngine.Random.Range(0, grassClips.Length - 1)]);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                footStepTimer = GetCurrentOffset;
+               
+            }
+        }
+
+      
+
+    }
+
+
     private float SpeedMovement()
     {
         float speed = walkSpeed;
 
-        if (Input.GetButton("Sprint") && canRun)
+        if (Input.GetKey(runKey) && canRun)
         {
             if (crouching)
             {
@@ -142,13 +236,18 @@ public class PlayerController : MonoBehaviour
 
         if (characterController.isGrounded)
         {
-            HandleJump();
+            if (jumpHability)
+            {
+                HandleJump();
+            }
+            
         }
         else
         {
             verticalVelocity += gravity * Time.deltaTime;
         }
 
+        currentInput = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
@@ -159,10 +258,10 @@ public class PlayerController : MonoBehaviour
 
     private void HandleJump()
     {
-        if (Input.GetKeyDown(KeyCode.Space) && readyToJump)
+        if (Input.GetKeyDown(jumpKey) && readyToJump)
         {
             readyToJump = false;
-            //verticalVelocity = jumpForce;
+            verticalVelocity = jumpForce;
             Invoke(nameof(ResetJump), jumpCooldown);
         }
         else
@@ -179,25 +278,36 @@ public class PlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(crouchKey))
         {
+            
             Crouching();
+            defauktYPos = playerCamera.transform.localPosition.y;
+            defauktXPos = playerCamera.transform.localPosition.x;
             crouching = true;
+
+           
         }
         else if (Input.GetKeyUp(crouchKey) && upCollision)
         {
+            
             Crouching();
+            defauktYPos = playerCamera.transform.localPosition.y;
+            defauktXPos = playerCamera.transform.localPosition.x;
             crouching = true;
         }
         else if (Input.GetKeyUp(crouchKey) && !upCollision)
         {
             NoCrouching();
+            defauktYPos = playerCamera.transform.localPosition.y;
+            defauktXPos = playerCamera.transform.localPosition.x;
             crouching = false;
         }
     }
     private void Crouching()
     {
-        characterController.height = 1f;
-        characterController.center = new Vector3(0, -0.5f, 0);
+        characterController.height = 0.5f;
+        //characterController.center = new Vector3(0, -0.5f, 0);
         playerCamera.transform.localPosition = new Vector3(0, 0.3f, 0);
+        Debug.DrawRay(characterController.transform.position, Vector3.down * 3, Color.red);
     }
     private void NoCrouching()
     {
@@ -266,7 +376,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 upDirection = playerCamera.transform.up; // Obtiene la dirección "arriba" de la cámara
 
-        if (Physics.Raycast(playerCamera.transform.position, upDirection, out hit, 0.5f))
+        if (Physics.Raycast(playerCamera.transform.position, upDirection, out hit, 1f))
         {
             upCollision = true;
             readyToJump = false;
@@ -278,4 +388,24 @@ public class PlayerController : MonoBehaviour
             readyToJump = true;
         }
     }
+
+
+    private void HandleHeadBobing()
+    {
+        if (!characterController.isGrounded) return;
+
+        if(MathF.Abs(moveDirection.x) > 0.1f || MathF.Abs(moveDirection.z) > 0.1f)
+        {
+            timerBob += Time.deltaTime * (crouching ? crouchBobSpeed : running ? sprintBobSpeed : walkBobSpeed);
+
+            playerCamera.transform.localPosition = new Vector3(
+                defauktXPos + MathF.Sin(timerBob * frequencyBob / 2) * (crouching ? crouchBobAmplitude : running ? sprintBobAmplitude : walkBobAmplitude),
+                defauktYPos + MathF.Sin(timerBob * frequencyBob) * (crouching ? crouchBobAmplitude : running ? sprintBobAmplitude: walkBobAmplitude),
+                playerCamera.transform.localPosition.z
+                );
+        } 
+    }
+
+    //defauktXPos + MathF.Sin(timerBob* frequencyBob/2) * (crouching? crouchBobAmplitude : running? sprintBobAmplitude : walkBobAmplitude),
+
 }
