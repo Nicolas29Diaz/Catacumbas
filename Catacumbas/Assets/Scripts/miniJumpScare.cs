@@ -6,13 +6,18 @@ using UnityEngine.SceneManagement;
 public class miniJumpScare : MonoBehaviour
 {
     public GameObject imageObject; // Arrastra el objeto de imagen en el Inspector
-    public AudioClip soundClip;    // Arrastra el clip de sonido en el Inspector
-    private AudioSource audioSource;
+    private AudioClip soundClip;    // Arrastra el clip de sonido en el Inspector
+    public AudioSource audioSource;
     private float fadeDuration = 1.0f; // Duración de la transparencia
+    public CharacterController JugadorController;
+    public GameObject GameOver;
     Vector3 puntoInicio;
     void Start()
     {
-        puntoInicio = gameObject.transform.position;   
+        puntoInicio = gameObject.transform.position;
+        soundClip = audioSource.GetComponent<AudioSource>().clip;
+        audioSource.Stop();
+        GameOver.SetActive(false);
     }
 
     // Update is called once per frame
@@ -20,48 +25,33 @@ public class miniJumpScare : MonoBehaviour
     {
         
     }
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.CompareTag("Player")) // Asegúrate de etiquetar tu jugador con "Player"
+        if (other.gameObject.CompareTag("Player")) // Asegúrate de etiquetar tu jugador con "Player"
         {
             gameObject.transform.position = puntoInicio;
-            StartCoroutine(ShowImageAndPlaySound());
-        }
-    }
+            // Mostrar imagen
+            imageObject.SetActive(true);
+            // Bajar transparencia de la imagen
+   
+          
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("Player")) // Asegúrate de etiquetar tu jugador con "Player"
-        {
-            gameObject.transform.position = puntoInicio;
+            // Play sonido
+            audioSource.PlayOneShot(soundClip);
+
+            // Esperar mientras el sonido termina de reproducirse
+            JugadorController.enabled = false;
+            
             StartCoroutine(ShowImageAndPlaySound());
         }
     }
 
     private IEnumerator ShowImageAndPlaySound()
     {
-        // Mostrar imagen
-        imageObject.SetActive(true);
-        yield return new WaitForSeconds(1.0f);
-
-        // Bajar transparencia de la imagen
-        float alphaValue = 1.0f;
-        while (alphaValue > 0)
-        {
-            alphaValue -= Time.deltaTime / fadeDuration;
-            Color tempColor = imageObject.GetComponent<SpriteRenderer>().color;
-            tempColor.a = alphaValue;
-            imageObject.GetComponent<SpriteRenderer>().color = tempColor;
-            yield return null;
-        }
-
-        // Play sonido
-        audioSource.PlayOneShot(soundClip);
-
-        // Esperar mientras el sonido termina de reproducirse
-        yield return new WaitForSeconds(audioSource.clip.length);
-
+        
+        yield return new WaitForSeconds(3.0f);
+        GameOver.SetActive(true);
+        yield return new WaitForSeconds(3.0f);
         // Reiniciar escena
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
